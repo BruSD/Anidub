@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Anidub</string>
+    <string name="custom_progress_dialog_text_anidub"> Загрузка...</string>
+
+</resources>
