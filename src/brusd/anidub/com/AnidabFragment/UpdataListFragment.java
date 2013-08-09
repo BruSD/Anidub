@@ -1,12 +1,15 @@
 package brusd.anidub.com.AnidabFragment;
 
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -18,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 
+import brusd.anidub.com.DBAniDubPackage.DatabaseAniDubOpenHelper;
+import brusd.anidub.com.DBAniDubPackage.Names;
 import brusd.anidub.com.DataClasses.AnimeAdapter;
 import brusd.anidub.com.DataClasses.AnimeItem;
 import brusd.anidub.com.DataClasses.DataStorage;
@@ -48,11 +53,33 @@ public class UpdataListFragment extends SherlockFragment{
     }
 
     public void loadAnimeRssList(){
-        AnimeAdapter adapter = new AnimeAdapter(getActivity(),
+        DatabaseAniDubOpenHelper dbhelper = new DatabaseAniDubOpenHelper(getActivity());
+
+        SQLiteDatabase sqliteDB = dbhelper.getReadableDatabase();
+
+        final String[] from = { Names.NamesColumns.TITLE_ANIME,
+                                Names.NamesColumns.UP_DATE_ANIME,
+                                Names.NamesColumns.IMAGE_LINK_ANIME,
+                                Names.NamesColumns.LINK_ANIME,
+                                Names.NamesColumns.GUID_ANIME};
+        final int[] to = new int[] { R.id.title_anime_item,  R.id.pub_date_anime_item,  };
+        final Cursor c = sqliteDB.query(Names.TABLE_NAME, null, null, null, null, null,
+                null);
+        final int i = c.getCount();
+
+
+
+        final SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.item_anime_layout,
+                c, from, to);
+
+        animeListiew.setAdapter(adapter);
+
+
+       /* AnimeAdapter adapter = new AnimeAdapter(getActivity(),
                 createAnimeList(), R.layout.item_anime_layout,
                 new String[] { "animetitle", "animedate"},
                 new int [] { R.id.title_anime_item, R.id.pub_date_anime_item}, getActivity() );
-        animeListiew.setAdapter(adapter);
+        animeListiew.setAdapter(adapter);*/
 
 
 
