@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../ActionBarSherlock/library/ABS.iml" filepath="$PROJECT_DIR$/../ActionBarSherlock/library/ABS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraryABS/ABS.iml" filepath="$PROJECT_DIR$/libraryABS/ABS.iml" />
       <module fileurl="file://$PROJECT_DIR$/Dev.iml" filepath="$PROJECT_DIR$/Dev.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../SlidingMenu/library/SM.iml" filepath="$PROJECT_DIR$/../SlidingMenu/library/SM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/librarySM/SM.iml" filepath="$PROJECT_DIR$/librarySM/SM.iml" />
     </modules>
   </component>
 </project>
