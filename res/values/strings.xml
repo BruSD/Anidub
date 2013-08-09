@@ -2,5 +2,6 @@
 <resources>
     <string name="app_name">Anidub</string>
     <string name="custom_progress_dialog_text_anidub"> Загрузка...</string>
+    <string name="splash_screen_progress_text">Что нового...</string>
 
 </resources>

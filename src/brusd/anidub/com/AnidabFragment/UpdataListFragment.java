@@ -1,16 +1,12 @@
 package brusd.anidub.com.AnidabFragment;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -26,7 +22,6 @@ import brusd.anidub.com.DataClasses.AnimeAdapter;
 import brusd.anidub.com.DataClasses.AnimeItem;
 import brusd.anidub.com.DataClasses.DataStorage;
 import brusd.anidub.com.DawnloadAndParser.DawnloadRssAsyncTask;
-import brusd.anidub.com.DawnloadAndParser.HtmlHelperAsyncTask;
 import brusd.anidub.com.R;
 
 /**
@@ -48,7 +43,8 @@ public class UpdataListFragment extends SherlockFragment{
     @Override
     public void onStart(){
         super.onStart();
-        new DawnloadRssAsyncTask(getActivity(), UpdataListFragment.this).execute();
+        loadAnimeRssList();
+        // new DawnloadRssAsyncTask(getActivity(), UpdataListFragment.this).execute();
     }
 
     public void loadAnimeRssList(){
