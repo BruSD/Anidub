@@ -69,8 +69,11 @@ public class UpdataListFragment extends SherlockFragment{
 
 
 
-        final SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.item_anime_layout,
-                c, from, to);
+        final SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
+                R.layout.item_anime_layout,
+                c,
+                from,
+                to);
 
         animeListiew.setAdapter(adapter);
 

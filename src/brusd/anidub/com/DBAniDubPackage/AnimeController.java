@@ -1,5 +1,6 @@
 package brusd.anidub.com.DBAniDubPackage;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -77,29 +78,43 @@ public class AnimeController {
     }
 
 
-    public static HashSet<String> isAnimeInBase(Context context, String[] guidList){
-        HashSet<String>  animeGuid = new HashSet<String>();
-        try {
-            DatabaseAniDubOpenHelper dbhelper = new DatabaseAniDubOpenHelper(context);
-            SQLiteDatabase sqliteDB = dbhelper.getReadableDatabase();
-            String[] columnsToTake = { BaseColumns._ID,
-                    Names.NamesColumns.GUID_ANIME,
-                    };
-            Cursor cursor = sqliteDB.query(Names.TABLE_NAME, columnsToTake, null, null, null, null,null);
+    public static boolean isAnimeInBase(Context context, SQLiteDatabase sqliteDB, String guid){
+        boolean isAnimeHear = false;
 
+        try {
+
+
+
+            Cursor cursor = sqliteDB.query(Names.TABLE_NAME, new String[] {Names.NamesColumns.GUID_ANIME},
+                    Names.NamesColumns.GUID_ANIME + "=?",
+                    new String[] {guid},
+                    null, null, null);
+
+            if (cursor.moveToFirst()){
+                isAnimeHear = true;
+            }
         }catch (Exception e) {
             Log.e(TAG, "Failed to se    Names.NamesColumns.lect Names.", e);
         }
-        return animeGuid;
+
+        return isAnimeHear;
     }
 
 
     /**Изменение строки в списке*/
-    public static void update(Context context, String comment, String comment1, String guid) {
+    public static void update(Context context, SQLiteDatabase sqliteDB, String comment, String comment1, String guid) {
 
         try {
-            DatabaseAniDubOpenHelper dbhelper = new DatabaseAniDubOpenHelper(context);
-            SQLiteDatabase sqliteDB = dbhelper.getWritableDatabase();
+
+            String[] strFilter = new String[]{guid};
+            ContentValues args = new ContentValues();
+            args.put(Names.NamesColumns.TITLE_ANIME, comment);
+            args.put(Names.NamesColumns.UP_DATE_ANIME, comment1);
+
+            sqliteDB.update(Names.TABLE_NAME, args, Names.NamesColumns.GUID_ANIME +"=?", strFilter);
+
+
+            /*
             String quer = null;
             int countRows = -1;
             Cursor cursor = sqliteDB.query(Names.TABLE_NAME, new String[] { "count(*)" }, null, null, null,
@@ -117,8 +132,7 @@ public class AnimeController {
                     "WHERE " + Names.NamesColumns.GUID_ANIME + " = '" + guid +"'";
             Log.d("", "" + quer);
             sqliteDB.execSQL(quer);
-            sqliteDB.close();
-            dbhelper.close();
+            */
         } catch (SQLiteException e) {
             Log.e(TAG, "Failed open database. ", e);
         } catch (SQLException e) {

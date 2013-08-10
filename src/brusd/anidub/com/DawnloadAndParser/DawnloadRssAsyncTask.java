@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import org.htmlcleaner.HtmlCleaner;
@@ -73,28 +74,12 @@ public class DawnloadRssAsyncTask extends AsyncTask<Void, Void, Integer> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        /*
-            dialog = new ProgressDialog(activity);
-            dialog.setMessage("Загрузка...");
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(false);
-            dialog.show();
-            dialog.setContentView(R.layout.custom_progress_dialog_layout_anidub);
-        */
+
     }
 
     @Override
     protected void onPostExecute(Integer result) {
-        /*
-        if (dialog != null && dialog.isShowing())
-            dialog.dismiss();
-        if (activity != null && activity instanceof MainActivity) {
-            if(fragment != null && fragment instanceof UpdataListFragment){
-                ((UpdataListFragment)fragment).loadAnimeRssList();
 
-            }
-        }
-        */
 
         if (activity != null && activity instanceof SplashAniDubScreen){
             ((SplashAniDubScreen)activity).startMainActivity();
@@ -140,6 +125,7 @@ public class DawnloadRssAsyncTask extends AsyncTask<Void, Void, Integer> {
                         //создали нашу базу и открыли для записи
                         DatabaseAniDubOpenHelper dbhelper = new DatabaseAniDubOpenHelper(activity);
                         SQLiteDatabase sqliteDB = dbhelper.getWritableDatabase();
+
                         for (int i = 0; i < nodeList.getLength(); i++) {
                             Element entry = (Element) nodeList.item(i);
 
@@ -152,24 +138,30 @@ public class DawnloadRssAsyncTask extends AsyncTask<Void, Void, Integer> {
 
                             String _guid = _guidE.getTextContent();//getFirstChild().getNodeValue();
                             String _title = _titleE.getTextContent();//getFirstChild().getNodeValue();
+
                             URL _link = new URL(_linkE.getTextContent());//getFirstChild().getNodeValue());
                             String _description = _descriptionE.getTextContent();//getFirstChild().getNodeValue();
-                            String _pubDate = _pubDateE.getTextContent();
-                            String _imageLink = getAnimeImageURL(_link);
-                            SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM yyyy KK:mm:ss ", Locale.getDefault());
-                            String newPubDate =new String();
-                            try {
-                                newPubDate = format.parse(_pubDate).toString();
-                            } catch (java.text.ParseException e) {
-                                e.printStackTrace();
+
+                            Date _pubDateT =  new Date(_pubDateE.getTextContent());
+
+                            SimpleDateFormat df = new SimpleDateFormat("E dd/MM/yy HH:mm");
+                            String _pubDate = df.format(_pubDateT);
+
+
+                            if (!AnimeController.isAnimeInBase(activity, sqliteDB, _guid)){
+                                String _imageLink = getAnimeImageURL(_link);
+
+                                AnimeController.write(activity, sqliteDB, _guid, _title, _description, _link.toString(), _pubDate, _imageLink);
+                            }else {
+                                AnimeController.update(activity, sqliteDB, _title, _pubDate, _guid);
                             }
 
 
-                            AnimeController.write(activity, sqliteDB, _guid, _title, _description, _link.toString(), _pubDate, _imageLink);
-
+                            /*
                             AnimeItem newAnimeItem = new AnimeItem(_guid,_title, _link, _description, _pubDate);
                             animeItemArrayList.add(newAnimeItem);
 
+                             */
 
                         } // end of item array
 
@@ -205,12 +197,11 @@ public class DawnloadRssAsyncTask extends AsyncTask<Void, Void, Integer> {
             e.printStackTrace();
         }
 
-        List<Map<String, ?>> imageURLtag = null;
-        List<TagNode> linkList = new ArrayList<TagNode>();
+
 
         //Выбираем все ссылки
         TagNode divElements[] = rootNode.getElementsByName("div", true);
-        String resultURL = null;
+
         String tempUrl = null;
         for (int i = 0; divElements != null && i < divElements.length; i++) {
             //получаем атрибут по имени
